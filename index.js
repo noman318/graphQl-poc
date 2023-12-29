@@ -62,7 +62,25 @@ const resolvers = {
       groq.games = groq.games.filter((data) => data.id !== args.id);
       return groq.games;
     },
-    addGame(_, args) {},
+    addGame(_, args) {
+      let game = {
+        id: Math.floor(Math.random() * 10000).toString(),
+        ...args.game,
+      };
+      // console.log("game", game);
+      groq.games.push(game);
+      return groq.games;
+    },
+    updateGame(_, args) {
+      console.log("args", args);
+      groq.games = groq.games.map((data) => {
+        if (data.id === args.id) {
+          return { ...data, ...args.edits };
+        }
+        return data;
+      });
+      return groq.games.find((data) => data.id === args.id);
+    },
   },
 };
 const server = new ApolloServer({
